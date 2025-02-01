@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Terminal } from 'xterm';
+import { Terminal as XTerm } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import { SearchAddon } from 'xterm-addon-search';
 import { WebLinksAddon } from 'xterm-addon-web-links';
@@ -18,8 +18,8 @@ interface ServerConsoleProps {
 
 export default function ServerConsole({ serverId, onStart, onStop, onRestart, onKill }: ServerConsoleProps) {
 	const terminalRef = useRef<HTMLDivElement>(null);
-	const terminal = useRef<Terminal>();
-	const searchAddonRef = useRef<SearchAddon>();
+	const terminal = useRef<XTerm | null>(null);
+	const searchAddonRef = useRef<SearchAddon | null>(null);
 
 	useEffect(() => {
 		if (!terminalRef.current || terminal.current) return;
