@@ -1,22 +1,22 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
 @layer base {
 	:root {
-		--color-primary: hsl(222.2 47.4% 11.2%);
-		--color-secondary: hsl(217.2 32.6% 17.5%);
-		--color-accent: hsl(210 40% 98%);
-		--color-background: hsl(0 0% 100%);
-		--color-foreground: hsl(222.2 47.4% 11.2%);
+		--primary-rgb: 28, 36, 54;
+		--secondary-rgb: 45, 55, 72;
+		--accent-rgb: 247, 250, 252;
+		--background-rgb: 255, 255, 255;
+		--foreground-rgb: 28, 36, 54;
 	}
 
 	.dark {
-		--color-primary: hsl(210 40% 98%);
-		--color-secondary: hsl(217.2 32.6% 17.5%);
-		--color-accent: hsl(222.2 47.4% 11.2%);
-		--color-background: hsl(222.2 84% 4.9%);
-		--color-foreground: hsl(210 40% 98%);
+		--primary-rgb: 247, 250, 252;
+		--secondary-rgb: 45, 55, 72;
+		--accent-rgb: 28, 36, 54;
+		--background-rgb: 13, 17, 23;
+		--foreground-rgb: 247, 250, 252;
 	}
 
 	body {
@@ -24,39 +24,132 @@
 	}
 }
 
+/* Custom Cursor */
+* {
+	cursor: none;
+}
+
+.custom-cursor {
+	width: 20px;
+	height: 20px;
+	background: rgba(var(--primary-rgb), 0.2);
+	border: 2px solid rgb(var(--primary-rgb));
+	border-radius: 50%;
+	position: fixed;
+	pointer-events: none;
+	z-index: 9999;
+	transition: transform 0.1s ease;
+}
+
+.custom-cursor-dot {
+	width: 4px;
+	height: 4px;
+	background: rgb(var(--primary-rgb));
+	border-radius: 50%;
+	position: fixed;
+	pointer-events: none;
+	z-index: 9999;
+}
+
+/* Modern Scrollbar */
+::-webkit-scrollbar {
+	width: 10px;
+}
+
+::-webkit-scrollbar-track {
+	background: rgb(var(--background-rgb));
+}
+
+::-webkit-scrollbar-thumb {
+	background: rgba(var(--primary-rgb), 0.2);
+	border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: rgba(var(--primary-rgb), 0.4);
+}
+
+/* Smooth Transitions */
+.page-transition-enter {
+	opacity: 0;
+	transform: translateY(20px);
+}
+
+.page-transition-enter-active {
+	opacity: 1;
+	transform: translateY(0);
+	transition: opacity 0.3s, transform 0.3s;
+}
+
+.page-transition-exit {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+.page-transition-exit-active {
+	opacity: 0;
+	transform: translateY(-20px);
+	transition: opacity 0.3s, transform 0.3s;
+}
+
+/* Modern Selection */
+::selection {
+	background: rgba(var(--primary-rgb), 0.2);
+	color: rgb(var(--foreground-rgb));
+}
+
+/* Hover Effects */
+.hover-lift {
+	transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+	transform: translateY(-2px);
+}
+
+/* Loading Animation */
+@keyframes pulse {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0.5; }
+}
+
+.animate-pulse {
+	animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Utility Classes */
 @layer utilities {
 	.bg-background {
-		background-color: var(--color-background);
+		background-color: rgb(var(--background-rgb));
 	}
 	.bg-primary {
-		background-color: var(--color-primary);
+		background-color: rgb(var(--primary-rgb));
 	}
 	.bg-secondary {
-		background-color: var(--color-secondary);
+		background-color: rgb(var(--secondary-rgb));
 	}
 	.bg-accent {
-		background-color: var(--color-accent);
+		background-color: rgb(var(--accent-rgb));
 	}
 	.text-foreground {
-		color: var(--color-foreground);
+		color: rgb(var(--foreground-rgb));
 	}
 	.text-primary {
-		color: var(--color-primary);
+		color: rgb(var(--primary-rgb));
 	}
 	.text-secondary {
-		color: var(--color-secondary);
+		color: rgb(var(--secondary-rgb));
 	}
 	.text-accent {
-		color: var(--color-accent);
+		color: rgb(var(--accent-rgb));
 	}
-
 
 	.animated-gradient {
 		background: linear-gradient(
 			-45deg,
-			var(--color-primary),
-			var(--color-secondary),
-			var(--color-accent)
+			rgb(var(--primary-rgb)),
+			rgb(var(--secondary-rgb)),
+			rgb(var(--accent-rgb))
 		);
 		background-size: 400% 400%;
 		animation: gradient 15s ease infinite;
@@ -68,20 +161,6 @@
 
 	.hover-card-animation {
 		@apply transition-all duration-300 hover:scale-105 hover:shadow-lg;
-	}
-
-	.button-glow {
-		@apply relative overflow-hidden;
-	}
-
-	.button-glow::after {
-		content: '';
-		@apply absolute inset-0 rounded-[inherit] opacity-0 transition-opacity duration-500;
-		box-shadow: 0 0 20px 5px var(--color-primary);
-	}
-
-	.button-glow:hover::after {
-		@apply opacity-100;
 	}
 }
 
@@ -97,16 +176,6 @@
 	100% { transform: translateY(0px); }
 }
 
-@keyframes pulse {
-	0% { transform: scale(1); }
-	50% { transform: scale(1.05); }
-	100% { transform: scale(1); }
-}
-
 .float-animation {
 	animation: float 3s ease-in-out infinite;
-}
-
-.pulse-animation {
-	animation: pulse 2s ease-in-out infinite;
 }

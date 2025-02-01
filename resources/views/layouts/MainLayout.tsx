@@ -1,38 +1,52 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { ThemeProvider } from '@/components/ui/ThemeProvider';
-import { Header } from '@/components/ui/layout/Header';
-import { Sidebar } from '@/components/ui/layout/Sidebar';
-import { ScrollArea } from '@radix-ui/react-scroll-area';
+'use client'
+
+import { useState, useEffect } from 'react'
+import { ThemeProvider } from '../theme/ThemeProvider'
+import { NavigationMenu } from '../components/ui/NavigationMenu'
+import { ThemeToggle } from '../components/ui/ThemeToggle'
+import { LoadingScreen } from '../components/ui/LoadingScreen'
+import { PageTransition } from '../components/ui/PageTransition'
 
 interface MainLayoutProps {
-	children: React.ReactNode;
+	children: React.ReactNode
 }
 
-export const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
+export function MainLayout({ children }: MainLayoutProps) {
+	const [isLoading, setIsLoading] = useState(true)
+
+	useEffect(() => {
+		const timer = setTimeout(() => setIsLoading(false), 1000)
+		return () => clearTimeout(timer)
+	}, [])
+
 	return (
-		<ThemeProvider>
-			<div className="min-h-screen bg-background">
-				<Header />
-				<div className="flex">
-					<Sidebar />
-					<ScrollArea className="flex-1">
-						<motion.main
-							initial={{ opacity: 0, y: 20 }}
-							animate={{ opacity: 1, y: 0 }}
-							className="container mx-auto px-6 py-8"
-						>
-							{children}
-						</motion.main>
-						<footer className="border-t border-border py-6">
-							<div className="container mx-auto px-6 text-center text-foreground/60">
-								<p>© {new Date().getFullYear()} Panel. All rights reserved.</p>
-								<p className="mt-1 text-sm">Version 1.0.0</p>
+		<ThemeProvider defaultTheme="system">
+			{isLoading ? (
+				<LoadingScreen />
+			) : (
+				<div className="min-h-screen bg-gradient-to-br from-background to-secondary">
+					<div className="fixed inset-0 bg-grid-white/[0.02] bg-[size:60px_60px] pointer-events-none" />
+					
+					<nav className="fixed top-0 w-full z-50">
+						<div className="backdrop-blur-md bg-background/30 mx-4 my-4 rounded-2xl border border-border/40 shadow-lg">
+							<div className="container mx-auto px-4 py-3 flex items-center justify-between">
+								<NavigationMenu />
+								<ThemeToggle />
 							</div>
-						</footer>
-					</ScrollArea>
+						</div>
+					</nav>
+
+					<main className="pt-24 pb-8 px-4">
+						<div className="container mx-auto">
+							<PageTransition>
+								<div className="backdrop-blur-md bg-background/30 rounded-2xl p-6 border border-border/40 shadow-lg animate-fade-in">
+									{children}
+								</div>
+							</PageTransition>
+						</div>
+					</main>
 				</div>
-			</div>
+			)}
 		</ThemeProvider>
-	);
-};
+	)
+}
