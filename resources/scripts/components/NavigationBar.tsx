@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { Settings, LogOut, Moon, Sun, User } from 'lucide-react';
@@ -21,11 +20,12 @@ import http from '@/api/http';
 import { useToast } from '@/components/ui/use-toast';
 
 
+
 export default () => {
     const name = useStoreState((state: ApplicationStore) => state.settings.data!.name);
     const rootAdmin = useStoreState((state: ApplicationStore) => state.user.data!.rootAdmin);
     const [isLoggingOut, setIsLoggingOut] = useState(false);
-    const { theme, setTheme } = useTheme();
+    const { config, setMode } = useTheme();
     const { toast } = useToast();
 
     const onTriggerLogout = async () => {
@@ -46,8 +46,8 @@ export default () => {
     };
 
     return (
-        <div className="w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 z-50 border-b">
-            <div className="container mx-auto flex h-16 items-center justify-between">
+        <nav className="border-b bg-background">
+            <div className="flex h-16 items-center px-4 w-full mx-auto max-w-7xl">
                 <div className="flex items-center gap-6">
                     <Link to="/" className="flex items-center space-x-2">
                         <span className="text-2xl font-bold">{name}</span>
@@ -66,13 +66,13 @@ export default () => {
                         </NavigationMenuList>
                     </NavigationMenu>
                 </div>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center ml-auto space-x-4">
                     <SearchContainer />
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger asChild>
-                                <Button variant="ghost" size="icon" onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
-                                    {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
+                                <Button variant="ghost" size="icon" onClick={() => setMode(config.mode === 'light' ? 'dark' : 'light')}>
+                                    {config.mode === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
                                 </Button>
                             </TooltipTrigger>
                             <TooltipContent>Toggle theme</TooltipContent>
@@ -120,6 +120,6 @@ export default () => {
                     </DropdownMenu>
                 </div>
             </div>
-        </div>
+        </nav>
     );
 };

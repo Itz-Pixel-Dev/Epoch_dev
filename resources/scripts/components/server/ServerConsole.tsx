@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { Terminal as XTerm } from 'xterm';
+import { useEffect, useRef } from 'react';
+import { Terminal as XTerminal } from 'xterm';
 import { FitAddon } from 'xterm-addon-fit';
 import { SearchAddon } from 'xterm-addon-search';
 import { WebLinksAddon } from 'xterm-addon-web-links';
@@ -9,22 +9,22 @@ import { Play, Square, RefreshCw, Power, Search, Download } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
 interface ServerConsoleProps {
-	serverId: string;
 	onStart: () => void;
 	onStop: () => void;
 	onRestart: () => void;
 	onKill: () => void;
 }
 
-export default function ServerConsole({ serverId, onStart, onStop, onRestart, onKill }: ServerConsoleProps) {
+
+export default function ServerConsole({ onStart, onStop, onRestart, onKill }: ServerConsoleProps) {
 	const terminalRef = useRef<HTMLDivElement>(null);
-	const terminal = useRef<XTerm | null>(null);
+	const terminal = useRef<XTerminal | null>(null);
 	const searchAddonRef = useRef<SearchAddon | null>(null);
 
 	useEffect(() => {
 		if (!terminalRef.current || terminal.current) return;
 
-		terminal.current = new Terminal({
+		terminal.current = new XTerminal({
 			fontSize: 14,
 			fontFamily: '"JetBrains Mono", Menlo, Monaco, "Courier New", monospace',
 			theme: {

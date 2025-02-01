@@ -1,4 +1,4 @@
-import React, { lazy } from 'react';
+import React, { lazy, useEffect } from 'react';
 import { hot } from 'react-hot-loader/root';
 import { Route, Router, Switch } from 'react-router-dom';
 import { StoreProvider } from 'easy-peasy';
@@ -40,32 +40,35 @@ interface ExtendedWindow extends Window {
 
 setupInterceptors(history);
 
-const App = () => {
+export default () => {
     const { PterodactylUser, SiteConfiguration } = window as ExtendedWindow;
-    if (PterodactylUser && !store.getState().user.data) {
-        store.getActions().user.setUserData({
-            uuid: PterodactylUser.uuid,
-            username: PterodactylUser.username,
-            email: PterodactylUser.email,
-            language: PterodactylUser.language,
-            rootAdmin: PterodactylUser.root_admin,
-            useTotp: PterodactylUser.use_totp,
-            createdAt: new Date(PterodactylUser.created_at),
-            updatedAt: new Date(PterodactylUser.updated_at),
-        });
-    }
 
-    if (!store.getState().settings.data) {
-        store.getActions().settings.setSettings(SiteConfiguration!);
-    }
+    useEffect(() => {
+        if (PterodactylUser && !store.getState().user.data) {
+            store.getActions().user.setUserData({
+                uuid: PterodactylUser.uuid,
+                username: PterodactylUser.username,
+                email: PterodactylUser.email,
+                language: PterodactylUser.language,
+                rootAdmin: PterodactylUser.root_admin,
+                useTotp: PterodactylUser.use_totp,
+                createdAt: new Date(PterodactylUser.created_at),
+                updatedAt: new Date(PterodactylUser.updated_at),
+            });
+        }
+
+        if (!store.getState().settings.data) {
+            store.getActions().settings.setSettings(SiteConfiguration!);
+        }
+    }, []);
 
     return (
-        <ThemeProvider defaultTheme="dark" storageKey="pterodactyl-theme">
-            <TooltipProvider>
-                <GlobalStylesheet />
-                <StoreProvider store={store}>
-                    <ProgressBar />
-                    <div css={tw`mx-auto w-auto`}>
+        <StoreProvider store={store}>
+            <ThemeProvider>
+                <TooltipProvider>
+                    <GlobalStylesheet />
+                    <div className="min-h-screen bg-background text-foreground">
+                        <ProgressBar />
                         <Router history={history}>
                             <Switch>
                                 <Route path={'/auth'}>
@@ -80,22 +83,24 @@ const App = () => {
                                         </ServerContext.Provider>
                                     </Spinner.Suspense>
                                 </AuthenticatedRoute>
-                                <AuthenticatedRoute path={'/'}>
+                                <AuthenticatedRoute path={'/admin'}>
                                     <Spinner.Suspense>
-                                        <DashboardRouter />
+                                        <AdminRouter />
                                     </Spinner.Suspense>
+                                </AuthenticatedRoute>
+                                <AuthenticatedRoute path={'/'} exact>
+                                    <DashboardRouter />
                                 </AuthenticatedRoute>
                                 <Route path={'*'}>
                                     <NotFound />
                                 </Route>
                             </Switch>
                         </Router>
+                        <Toaster />
                     </div>
-                    <Toaster />
-                </StoreProvider>
-            </TooltipProvider>
-        </ThemeProvider>
+                </TooltipProvider>
+            </ThemeProvider>
+        </StoreProvider>
     );
 };
 
-export default hot(App);

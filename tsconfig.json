@@ -18,8 +18,17 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
-    "verbatimModuleSyntax": true,
-    "types": ["node", "react", "react-dom"],
+    "verbatimModuleSyntax": false,
+    "types": [
+      "node",
+      "react",
+      "react-dom",
+      "react-router-dom",
+      "yup",
+      "formik",
+      "chart.js",
+      "classnames"
+    ],
     "paths": {
       "@/*": [
         "./resources/scripts/*"
@@ -37,13 +46,13 @@
       }
     ],
     "typeRoots": [
-      "node_modules/@types"
+      "./node_modules/@types"
     ]
   },
   "include": [
     "./resources/scripts/**/*"
   ],
   "exclude": [
-    "/node_modules/"
+    "node_modules"
   ]
 }

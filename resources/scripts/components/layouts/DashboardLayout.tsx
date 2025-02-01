@@ -7,6 +7,8 @@ import { useTheme } from '../providers/theme-provider';
 import { Badge } from '../ui/badge';
 import { Separator } from '../ui/separator';
 import { ScrollArea } from '../ui/scroll-area';
+import { ThemeSettings } from '@/components/settings/ThemeSettings';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 
 interface DashboardLayoutProps {
 	children: React.ReactNode;
@@ -74,10 +76,17 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 									</div>
 								</div>
 								<Separator />
-								<DropdownMenuItem>
-									<Settings className="mr-2 h-4 w-4" />
-									Settings
-								</DropdownMenuItem>
+								<Dialog>
+									<DialogTrigger asChild>
+										<DropdownMenuItem>
+											<Settings className="mr-2 h-4 w-4" />
+											Theme Settings
+										</DropdownMenuItem>
+									</DialogTrigger>
+									<DialogContent className="sm:max-w-[600px]">
+										<ThemeSettings />
+									</DialogContent>
+								</Dialog>
 								<DropdownMenuItem className="text-red-600">
 									<LogOut className="mr-2 h-4 w-4" />
 									Logout

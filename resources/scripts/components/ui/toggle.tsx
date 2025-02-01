@@ -1,6 +1,6 @@
-import * as React from "react"
+import { type ComponentProps, forwardRef } from "react"
+import { cva, type VariantProps as CVAVariantProps } from "class-variance-authority"
 import * as TogglePrimitive from "@radix-ui/react-toggle"
-import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "./utils"
 
 const toggleVariants = cva(
@@ -9,8 +9,7 @@ const toggleVariants = cva(
 		variants: {
 			variant: {
 				default: "bg-transparent",
-				outline:
-					"border border-input bg-transparent hover:bg-accent hover:text-accent-foreground",
+				outline: "border border-input bg-transparent hover:bg-accent hover:text-accent-foreground",
 			},
 			size: {
 				default: "h-10 px-3",
@@ -25,23 +24,21 @@ const toggleVariants = cva(
 	}
 )
 
-type ToggleVariants = VariantProps<typeof toggleVariants>
+type ToggleVariants = CVAVariantProps<typeof toggleVariants>
 
-interface ToggleProps
-	extends React.ComponentPropsWithoutRef<typeof TogglePrimitive.Root>,
-		ToggleVariants {}
+interface ToggleProps extends ComponentProps<typeof TogglePrimitive.Root>, ToggleVariants {}
 
-const Toggle = React.forwardRef<
-	React.ElementRef<typeof TogglePrimitive.Root>,
-	ToggleProps
->(({ className, variant, size, ...props }, ref) => (
-	<TogglePrimitive.Root
-		ref={ref}
-		className={cn(toggleVariants({ variant, size, className }))}
-		{...props}
-	/>
-))
+const Toggle = forwardRef<HTMLButtonElement, ToggleProps>(
+	({ className, variant, size, ...props }, ref) => (
+		<TogglePrimitive.Root
+			ref={ref}
+			className={cn(toggleVariants({ variant, size, className }))}
+			{...props}
+		/>
+	)
+)
 
 Toggle.displayName = TogglePrimitive.Root.displayName
 
 export { Toggle, toggleVariants }
+export type { ToggleProps, ToggleVariants }

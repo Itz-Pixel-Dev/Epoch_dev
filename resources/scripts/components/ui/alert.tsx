@@ -1,7 +1,7 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
-import { cn } from "./utils"
-import { AlertTriangle, Info, CheckCircle, XCircle } from "lucide-react"
+import { cn } from "@/components/ui/utils"
+import { AlertCircle, CheckCircle2, Info, XCircle, X } from "lucide-react"
 
 const alertVariants = cva(
 	"relative w-full rounded-lg border p-4 [&>svg~*]:pl-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground",
@@ -9,10 +9,13 @@ const alertVariants = cva(
 		variants: {
 			variant: {
 				default: "bg-background text-foreground",
-				destructive: "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
-				success: "border-success/50 text-success dark:border-success [&>svg]:text-success",
-				warning: "border-warning/50 text-warning dark:border-warning [&>svg]:text-warning",
-				info: "border-info/50 text-info dark:border-info [&>svg]:text-info",
+				destructive:
+					"border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
+				success:
+					"border-green-500/50 text-green-600 dark:border-green-500 [&>svg]:text-green-600",
+				warning:
+					"border-yellow-500/50 text-yellow-600 dark:border-yellow-500 [&>svg]:text-yellow-600",
+				info: "border-blue-500/50 text-blue-600 dark:border-blue-500 [&>svg]:text-blue-600",
 			},
 		},
 		defaultVariants: {
@@ -21,25 +24,21 @@ const alertVariants = cva(
 	}
 )
 
-type AlertVariants = VariantProps<typeof alertVariants>
-
 const iconMap = {
 	default: Info,
 	destructive: XCircle,
-	success: CheckCircle,
-	warning: AlertTriangle,
+	success: CheckCircle2,
+	warning: AlertCircle,
 	info: Info,
-}
+} as const
 
-interface AlertProps extends React.HTMLAttributes<HTMLDivElement>, AlertVariants {
-	/** Whether to show the icon */
-	showIcon?: boolean;
-	/** Whether the alert is dismissible */
-	dismissible?: boolean;
-	/** Callback when the alert is dismissed */
-	onDismiss?: () => void;
+interface AlertProps
+	extends React.HTMLAttributes<HTMLDivElement>,
+		VariantProps<typeof alertVariants> {
+	showIcon?: boolean
+	dismissible?: boolean
+	onDismiss?: () => void
 }
-
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
 	({ className, variant = "default", showIcon = true, dismissible, onDismiss, children, ...props }, ref) => {
@@ -53,18 +52,16 @@ const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
 				{...props}
 			>
 				{showIcon && <Icon className="h-4 w-4" />}
-				<div className="flex justify-between gap-4">
-					<div>{children}</div>
-					{dismissible && (
-						<button
-							onClick={onDismiss}
-							className="inline-flex h-4 w-4 items-center justify-center rounded-md opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
-							aria-label="Dismiss alert"
-						>
-							<XCircle className="h-4 w-4" />
-						</button>
-					)}
-				</div>
+				<div>{children}</div>
+				{dismissible && (
+					<button
+						onClick={onDismiss}
+						className="absolute right-2 top-2 rounded-md p-1 hover:bg-accent/50"
+					>
+						<X className="h-4 w-4" />
+						<span className="sr-only">Dismiss</span>
+					</button>
+				)}
 			</div>
 		)
 	}
@@ -96,4 +93,3 @@ const AlertDescription = React.forwardRef<
 AlertDescription.displayName = "AlertDescription"
 
 export { Alert, AlertTitle, AlertDescription }
-export type { AlertProps }

@@ -1,4 +1,4 @@
-import React from 'react';
+import { Memory, Cpu, HardDrive } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/card';
 import { Line } from 'react-chartjs-2';
 import {
@@ -10,10 +10,9 @@ import {
 	Title,
 	Tooltip,
 	Legend,
-	Filler
+	ChartData,
+	ChartOptions
 } from 'chart.js';
-import { Activity, Memory, Cpu, HardDrive } from 'lucide-react';
-import { Progress } from '../ui/progress';
 
 ChartJS.register(
 	CategoryScale,
@@ -22,9 +21,9 @@ ChartJS.register(
 	LineElement,
 	Title,
 	Tooltip,
-	Legend,
-	Filler
+	Legend
 );
+
 
 interface ServerStatsProps {
 	cpuUsage: number[];
