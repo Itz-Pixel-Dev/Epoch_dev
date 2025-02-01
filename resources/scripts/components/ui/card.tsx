@@ -1,26 +1,41 @@
 import * as React from "react"
+import { motion } from "framer-motion"
+import { useTheme } from "./ThemeProvider"
 import { cn } from "./utils"
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-	/** Whether to show hover animation */
-	hoverable?: boolean;
+	/** Card variant */
+	variant?: 'default' | 'hover';
+	/** Padding size */
+	padding?: 'none' | 'sm' | 'md' | 'lg';
 	/** Whether to show glass effect */
 	glass?: boolean;
 }
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-	({ className, hoverable, glass, ...props }, ref) => (
-		<div
-			ref={ref}
-			className={cn(
-				"rounded-lg border bg-card text-card-foreground shadow-sm",
-				hoverable && "transition-shadow duration-200 hover:shadow-lg",
-				glass && "bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60",
-				className
-			)}
-			{...props}
-		/>
-	)
+	({ className, variant = 'default', padding = 'md', glass, ...props }, ref) => {
+		const { theme } = useTheme();
+
+		return (
+			<motion.div
+				ref={ref}
+				initial={{ opacity: 0, y: 20 }}
+				animate={{ opacity: 1, y: 0 }}
+				exit={{ opacity: 0, y: 20 }}
+				whileHover={variant === 'hover' ? { scale: 1.02 } : undefined}
+				className={cn(
+					"rounded-lg border bg-card text-card-foreground shadow-sm transition-colors",
+					variant === 'hover' && "hover:border-primary cursor-pointer",
+					padding === 'sm' && "p-3",
+					padding === 'md' && "p-5", 
+					padding === 'lg' && "p-7",
+					glass && "bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+					className
+				)}
+				{...props}
+			/>
+		)
+	}
 )
 Card.displayName = "Card"
 

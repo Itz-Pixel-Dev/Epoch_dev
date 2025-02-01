@@ -1,95 +1,80 @@
-import * as React from "react"
-import { cva, type VariantProps } from "class-variance-authority"
-import { cn } from "@/components/ui/utils"
-import { AlertCircle, CheckCircle2, Info, XCircle, X } from "lucide-react"
+import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useTheme } from './ThemeProvider';
+import { cn } from './utils';
+import { X } from 'lucide-react';
 
-const alertVariants = cva(
-	"relative w-full rounded-lg border p-4 [&>svg~*]:pl-7 [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:text-foreground",
-	{
-		variants: {
-			variant: {
-				default: "bg-background text-foreground",
-				destructive:
-					"border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
-				success:
-					"border-green-500/50 text-green-600 dark:border-green-500 [&>svg]:text-green-600",
-				warning:
-					"border-yellow-500/50 text-yellow-600 dark:border-yellow-500 [&>svg]:text-yellow-600",
-				info: "border-blue-500/50 text-blue-600 dark:border-blue-500 [&>svg]:text-blue-600",
-			},
-		},
-		defaultVariants: {
-			variant: "default",
-		},
-	}
-)
-
-const iconMap = {
-	default: Info,
-	destructive: XCircle,
-	success: CheckCircle2,
-	warning: AlertCircle,
-	info: Info,
-} as const
-
-interface AlertProps
-	extends React.HTMLAttributes<HTMLDivElement>,
-		VariantProps<typeof alertVariants> {
-	showIcon?: boolean
-	dismissible?: boolean
-	onDismiss?: () => void
+interface AlertProps extends React.HTMLAttributes<HTMLDivElement> {
+	variant?: 'info' | 'success' | 'warning' | 'error';
+	title?: string;
+	show?: boolean;
+	onClose?: () => void;
 }
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
-	({ className, variant = "default", showIcon = true, dismissible, onDismiss, children, ...props }, ref) => {
-		const Icon = iconMap[variant || "default"]
+	({ className, variant = 'info', title, show = true, onClose, children, ...props }, ref) => {
+		const { isDark } = useTheme();
+
+		const variants = {
+			info: 'bg-blue-50 dark:bg-blue-900/50 border-blue-200 dark:border-blue-800',
+			success: 'bg-green-50 dark:bg-green-900/50 border-green-200 dark:border-green-800',
+			warning: 'bg-yellow-50 dark:bg-yellow-900/50 border-yellow-200 dark:border-yellow-800',
+			error: 'bg-red-50 dark:bg-red-900/50 border-red-200 dark:border-red-800',
+		};
+
+		const textColors = {
+			info: 'text-blue-800 dark:text-blue-200',
+			success: 'text-green-800 dark:text-green-200',
+			warning: 'text-yellow-800 dark:text-yellow-200',
+			error: 'text-red-800 dark:text-red-200',
+		};
 
 		return (
-			<div
-				ref={ref}
-				role="alert"
-				className={cn(alertVariants({ variant }), className)}
-				{...props}
-			>
-				{showIcon && <Icon className="h-4 w-4" />}
-				<div>{children}</div>
-				{dismissible && (
-					<button
-						onClick={onDismiss}
-						className="absolute right-2 top-2 rounded-md p-1 hover:bg-accent/50"
+			<AnimatePresence>
+				{show && (
+					<motion.div
+						ref={ref}
+						initial={{ opacity: 0, y: -20 }}
+						animate={{ opacity: 1, y: 0 }}
+						exit={{ opacity: 0, y: -20 }}
+						className={cn(
+							'rounded-lg border p-4',
+							variants[variant],
+							className
+						)}
+						{...props}
 					>
-						<X className="h-4 w-4" />
-						<span className="sr-only">Dismiss</span>
-					</button>
+						<div className="flex justify-between items-start">
+							<div className="flex-1">
+								{title && (
+									<h3 className={cn('text-sm font-medium mb-1', textColors[variant])}>
+										{title}
+									</h3>
+								)}
+								<div className={cn('text-sm', textColors[variant])}>{children}</div>
+							</div>
+							{onClose && (
+								<button
+									onClick={onClose}
+									className={cn(
+										'ml-4 inline-flex shrink-0 rounded-md p-1.5 focus:outline-none focus:ring-2 focus:ring-offset-2',
+										textColors[variant],
+										`hover:bg-${variant}-100 dark:hover:bg-${variant}-800`
+									)}
+								>
+									<span className="sr-only">Close</span>
+									<X className="h-4 w-4" />
+								</button>
+							)}
+						</div>
+					</motion.div>
 				)}
-			</div>
-		)
+			</AnimatePresence>
+		);
 	}
-)
-Alert.displayName = "Alert"
+);
 
-const AlertTitle = React.forwardRef<
-	HTMLParagraphElement,
-	React.HTMLAttributes<HTMLHeadingElement>
->(({ className, ...props }, ref) => (
-	<h5
-		ref={ref}
-		className={cn("mb-1 font-medium leading-none tracking-tight", className)}
-		{...props}
-	/>
-))
-AlertTitle.displayName = "AlertTitle"
+Alert.displayName = 'Alert';
 
-const AlertDescription = React.forwardRef<
-	HTMLParagraphElement,
-	React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => (
-	<div
-		ref={ref}
-		className={cn("text-sm [&_p]:leading-relaxed", className)}
-		{...props}
-	/>
-))
-AlertDescription.displayName = "AlertDescription"
+export { Alert };
 
-export { Alert, AlertTitle, AlertDescription }
