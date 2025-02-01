@@ -12,8 +12,8 @@ interface ServerCardProps {
 	onManageClick: () => void;
 }
 
-const getStatusColor = (status: string): string => {
-	switch (status) {
+const getStatusColor = (status: string | null): string => {
+	switch (status?.toLowerCase()) {
 		case 'running':
 			return 'text-green-500';
 		case 'offline':
@@ -41,7 +41,7 @@ export default function ServerCard({ server, onConsoleClick, onManageClick }: Se
 							{server.node}
 						</CardDescription>
 					</div>
-					<div className={`flex items-center ${getStatusColor(server.status)} float-animation`}>
+					<div className={cn("flex items-center float-animation", getStatusColor(server.status))}>
 						<Power className="h-5 w-5 mr-2" />
 						<span className="capitalize font-medium">{server.status}</span>
 					</div>
@@ -83,7 +83,7 @@ export default function ServerCard({ server, onConsoleClick, onManageClick }: Se
 			</CardContent>
 			<CardFooter className="flex justify-end space-x-2">
 				<Button 
-					variant="outline" 
+					variant="outline"
 					onClick={onConsoleClick}
 					className="button-glow"
 				>

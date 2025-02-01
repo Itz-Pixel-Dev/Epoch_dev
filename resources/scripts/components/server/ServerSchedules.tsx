@@ -47,41 +47,60 @@ export default function ServerSchedules({
 		}
 	};
 
-	const ScheduleForm = ({ schedule, onSubmit }: { schedule?: Schedule; onSubmit: (data: ScheduleFormData) => void }) => (
-		<div className="space-y-4">
-			<div className="space-y-2">
-				<label className="text-sm font-medium">Name</label>
-				<Input
-					defaultValue={schedule?.name}
-					onChange={(e) => onSubmit({ ...schedule, name: e.target.value })}
-				/>
-			</div>
-			<div className="grid grid-cols-2 gap-4">
+	const ScheduleForm = ({ schedule, onSubmit }: { schedule?: Schedule; onSubmit: (data: ScheduleFormData) => void }) => {
+		const defaultCron = {
+			minute: '*',
+			hour: '*',
+			dayOfMonth: '*',
+			month: '*',
+			dayOfWeek: '*'
+		};
+
+		const [formData, setFormData] = useState<ScheduleFormData>({
+			name: schedule?.name || '',
+			cron: schedule?.cron || defaultCron
+		});
+
+		const updateForm = (updates: Partial<ScheduleFormData>) => {
+			const newData = { ...formData, ...updates };
+			setFormData(newData);
+			onSubmit(newData);
+		};
+
+		return (
+			<div className="space-y-4">
 				<div className="space-y-2">
-					<label className="text-sm font-medium">Minute</label>
+					<label className="text-sm font-medium">Name</label>
 					<Input
-						defaultValue={schedule?.cron.minute}
-						placeholder="*/5"
-						onChange={(e) => onSubmit({ 
-							...schedule, 
-							cron: { ...schedule?.cron, minute: e.target.value }
-						})}
+						value={formData.name}
+						onChange={(e) => updateForm({ name: e.target.value })}
 					/>
 				</div>
-				<div className="space-y-2">
-					<label className="text-sm font-medium">Hour</label>
-					<Input
-						defaultValue={schedule?.cron.hour}
-						placeholder="*"
-						onChange={(e) => onSubmit({ 
-							...schedule, 
-							cron: { ...schedule?.cron, hour: e.target.value }
-						})}
-					/>
+				<div className="grid grid-cols-2 gap-4">
+					<div className="space-y-2">
+						<label className="text-sm font-medium">Minute</label>
+						<Input
+							value={formData.cron.minute}
+							placeholder="*/5"
+							onChange={(e) => updateForm({ 
+								cron: { ...formData.cron, minute: e.target.value }
+							})}
+						/>
+					</div>
+					<div className="space-y-2">
+						<label className="text-sm font-medium">Hour</label>
+						<Input
+							value={formData.cron.hour}
+							placeholder="*"
+							onChange={(e) => updateForm({ 
+								cron: { ...formData.cron, hour: e.target.value }
+							})}
+						/>
+					</div>
 				</div>
 			</div>
-		</div>
-	);
+		);
+	};
 
 	return (
 		<Card>

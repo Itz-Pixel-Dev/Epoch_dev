@@ -17,6 +17,7 @@ export interface ToastProps extends BaseProps {
 	title?: string;
 	description?: string;
 	action?: ReactNode;
+	duration?: number;
 }
 
 export interface CommandDialogProps extends BaseProps {

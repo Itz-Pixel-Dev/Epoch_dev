@@ -9,14 +9,10 @@ const alertVariants = cva(
 		variants: {
 			variant: {
 				default: "bg-background text-foreground",
-				destructive:
-					"border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
-				success:
-					"border-green-500/50 text-green-600 dark:border-green-500 [&>svg]:text-green-600",
-				warning:
-					"border-yellow-500/50 text-yellow-600 dark:border-yellow-500 [&>svg]:text-yellow-600",
-				info:
-					"border-blue-500/50 text-blue-600 dark:border-blue-500 [&>svg]:text-blue-600",
+				destructive: "border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive",
+				success: "border-success/50 text-success dark:border-success [&>svg]:text-success",
+				warning: "border-warning/50 text-warning dark:border-warning [&>svg]:text-warning",
+				info: "border-info/50 text-info dark:border-info [&>svg]:text-info",
 			},
 		},
 		defaultVariants: {
@@ -24,6 +20,8 @@ const alertVariants = cva(
 		},
 	}
 )
+
+type AlertVariants = VariantProps<typeof alertVariants>
 
 const iconMap = {
 	default: Info,
@@ -33,9 +31,7 @@ const iconMap = {
 	info: Info,
 }
 
-interface AlertProps
-	extends React.HTMLAttributes<HTMLDivElement>,
-		VariantProps<typeof alertVariants> {
+interface AlertProps extends React.HTMLAttributes<HTMLDivElement>, AlertVariants {
 	/** Whether to show the icon */
 	showIcon?: boolean;
 	/** Whether the alert is dismissible */
@@ -43,6 +39,7 @@ interface AlertProps
 	/** Callback when the alert is dismissed */
 	onDismiss?: () => void;
 }
+
 
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(
 	({ className, variant = "default", showIcon = true, dismissible, onDismiss, children, ...props }, ref) => {

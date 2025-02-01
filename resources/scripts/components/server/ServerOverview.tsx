@@ -1,5 +1,6 @@
 import React from 'react';
 import type { Server } from '@/api/server/getServer';
+import type { Schedule } from '@/api/server/types'; // Add Schedule type import
 import ServerCard from './ServerCard';
 import ServerConsole from './ServerConsole';
 import ServerStats from './ServerStats';
@@ -27,6 +28,34 @@ export default function ServerOverview({
 	onConsoleCommand,
 	onServerAction,
 }: ServerOverviewProps) {
+	const handleCreateDatabase = async (name: string): Promise<void> => {
+		// Implementation here
+	};
+
+	const handleDeleteDatabase = async (id: string): Promise<void> => {
+		// Implementation here
+	};
+
+	const handleRotatePassword = async (id: string): Promise<void> => {
+		// Implementation here
+	};
+
+	const handleCreateSchedule = async (schedule: Schedule): Promise<void> => {
+		// Implementation here
+	};
+
+	const handleDeleteSchedule = async (id: string): Promise<void> => {
+		// Implementation here
+	};
+
+	const handleToggleSchedule = async (id: string): Promise<void> => {
+		// Implementation here
+	};
+
+	const handleEditSchedule = async (schedule: Schedule): Promise<void> => {
+		// Implementation here
+	};
+
 	return (
 		<div className="space-y-6">
 			<ServerCard
@@ -87,19 +116,19 @@ export default function ServerOverview({
 				<TabsContent value="databases" className="mt-6">
 					<ServerDatabases
 						databases={[]} // Add database data
-						onCreateDatabase={() => {}} // Handle create
-						onDeleteDatabase={() => {}} // Handle delete
-						onRotatePassword={() => {}} // Handle password rotation
+						onCreateDatabase={handleCreateDatabase}
+						onDeleteDatabase={handleDeleteDatabase}
+						onRotatePassword={handleRotatePassword}
 					/>
 				</TabsContent>
 
 				<TabsContent value="schedules" className="mt-6">
 					<ServerSchedules
 						schedules={[]} // Add schedule data
-						onCreateSchedule={() => {}} // Handle create
-						onDeleteSchedule={() => {}} // Handle delete
-						onToggleSchedule={() => {}} // Handle toggle
-						onEditSchedule={() => {}} // Handle edit
+						onCreateSchedule={handleCreateSchedule}
+						onDeleteSchedule={handleDeleteSchedule}
+						onToggleSchedule={handleToggleSchedule}
+						onEditSchedule={handleEditSchedule}
 					/>
 				</TabsContent>
 			</Tabs>

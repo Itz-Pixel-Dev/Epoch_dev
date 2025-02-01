@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { Settings, Layers, LogOut, Search, Moon, Sun, User } from 'lucide-react';
+import { Settings, LogOut, Moon, Sun, User } from 'lucide-react';
 import { useStoreState } from 'easy-peasy';
-import { ApplicationStore } from '@/state';
+import type { ApplicationStore } from '@/state';
 import SearchContainer from '@/components/dashboard/search/SearchContainer';
 import { useTheme } from '@/components/providers/theme-provider';
 import { Button } from '@/components/ui/button';
