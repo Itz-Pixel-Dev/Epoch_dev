@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
+import type { ServerDatabase } from '@/api/server/databases/getServerDatabases';
+import { Database, Plus, Key, Trash2, Copy, Eye, EyeOff } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/card';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { Database, Plus, Key, Trash2, Copy, Eye, EyeOff, ExternalLink } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
-import { ServerDatabase } from '@/api/server/databases/getServerDatabases';
+import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '../ui/tooltip';
 import { useToast } from '../ui/use-toast';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
 interface ServerDatabasesProps {
 	databases: ServerDatabase[];
-	onCreateDatabase: (name: string) => void;
-	onDeleteDatabase: (id: string) => void;
-	onRotatePassword: (id: string) => void;
+	onCreateDatabase: (name: string) => Promise<void>;
+	onDeleteDatabase: (id: string) => Promise<void>;
+	onRotatePassword: (id: string) => Promise<void>;
 }
 
 export default function ServerDatabases({

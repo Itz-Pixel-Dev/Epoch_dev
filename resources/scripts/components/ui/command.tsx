@@ -1,9 +1,9 @@
 import * as React from "react"
-import { DialogProps } from "@radix-ui/react-dialog"
 import { Command as CommandPrimitive } from "cmdk"
 import { Search, Loader2 } from "lucide-react"
 import { cn } from "./utils"
 import { Dialog, DialogContent } from "./dialog"
+import { type CommandDialogProps } from "./types"
 
 const Command = React.forwardRef<
 	React.ElementRef<typeof CommandPrimitive>,
@@ -20,12 +20,8 @@ const Command = React.forwardRef<
 ))
 Command.displayName = CommandPrimitive.displayName
 
-interface CommandDialogProps extends DialogProps {
-	/** Whether the dialog is loading */
-	loading?: boolean;
-}
-
 const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
+
 	return (
 		<Dialog {...props}>
 			<DialogContent className="overflow-hidden p-0 shadow-lg">
@@ -37,18 +33,16 @@ const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
 	)
 }
 
-interface CommandInputProps extends React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input> {
-	/** Whether the input is in a loading state */
-	loading?: boolean;
-}
-
 const CommandInput = React.forwardRef<
 	React.ElementRef<typeof CommandPrimitive.Input>,
-	CommandInputProps
+	React.ComponentPropsWithoutRef<typeof CommandPrimitive.Input> & {
+		loading?: boolean
+	}
+
 >(({ className, loading, ...props }, ref) => (
 	<div className="flex items-center border-b px-3" cmdk-input-wrapper="">
 		{loading ? (
-			<Loader2 className="mr-2 h-4 w-4 shrink-0 animate-spin opacity-50" />
+			<Loader2 className="mr-2 h-4 w-4 shrink-0 animate-spin" />
 		) : (
 			<Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
 		)}
@@ -158,4 +152,3 @@ export {
 	CommandSeparator,
 }
 
-export type { CommandDialogProps, CommandInputProps }

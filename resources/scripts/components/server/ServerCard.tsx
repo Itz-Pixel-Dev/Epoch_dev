@@ -1,9 +1,10 @@
 import React from 'react';
+import type { Server } from '@/api/server/getServer';
+import { Power, Terminal, HardDrive, Cpu, Memory } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../ui/card';
 import { Button } from '../ui/button';
-import { Server } from '@/api/server/getServer';
-import { Power, Terminal, HardDrive, Activity, Cpu, Memory } from 'lucide-react';
 import { Progress } from '../ui/progress';
+import { cn } from '../ui/utils';
 
 interface ServerCardProps {
 	server: Server;
@@ -11,20 +12,21 @@ interface ServerCardProps {
 	onManageClick: () => void;
 }
 
+const getStatusColor = (status: string): string => {
+	switch (status) {
+		case 'running':
+			return 'text-green-500';
+		case 'offline':
+			return 'text-red-500';
+		case 'starting':
+		case 'stopping':
+			return 'text-yellow-500';
+		default:
+			return 'text-gray-500';
+	}
+};
+
 export default function ServerCard({ server, onConsoleClick, onManageClick }: ServerCardProps) {
-	const getStatusColor = (status: string) => {
-		switch (status) {
-			case 'running':
-				return 'text-green-500';
-			case 'offline':
-				return 'text-red-500';
-			case 'starting':
-			case 'stopping':
-				return 'text-yellow-500';
-			default:
-				return 'text-gray-500';
-		}
-	};
 
 	return (
 		<Card className="hover-card-animation glass-effect">

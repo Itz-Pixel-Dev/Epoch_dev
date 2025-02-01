@@ -31,7 +31,7 @@ const TabsList = React.forwardRef<
 			{children}
 		</TabsPrimitive.List>
 	);
-})
+});
 TabsList.displayName = "TabsList"
 
 interface TabsTriggerProps extends React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger> {
@@ -55,7 +55,7 @@ const TabsTrigger = React.forwardRef<
 	>
 		{children}
 	</TabsPrimitive.Trigger>
-))
+));
 TabsTrigger.displayName = "TabsTrigger"
 
 interface TabsContentProps extends React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content> {
@@ -78,8 +78,8 @@ const TabsContent = React.forwardRef<
 	>
 		{children}
 	</TabsPrimitive.Content>
-))
+));
 TabsContent.displayName = "TabsContent"
 
-export type { TabsListProps, TabsTriggerProps, TabsContentProps }
 export { Tabs, TabsList, TabsTrigger, TabsContent }
+export type { TabsListProps, TabsTriggerProps, TabsContentProps }

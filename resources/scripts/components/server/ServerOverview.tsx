@@ -1,13 +1,13 @@
 import React from 'react';
-import { ServerCard } from './ServerCard';
-import { ServerConsole } from './ServerConsole';
-import { ServerStats } from './ServerStats';
-import { ServerFileManager } from './ServerFileManager';
-import { ServerDatabases } from './ServerDatabases';
-import { ServerSchedules } from './ServerSchedules';
-import { Server } from '@/api/server/getServer';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+import type { Server } from '@/api/server/getServer';
+import ServerCard from './ServerCard';
+import ServerConsole from './ServerConsole';
+import ServerStats from './ServerStats';
+import ServerFileManager from './ServerFileManager';
+import ServerDatabases from './ServerDatabases';
+import ServerSchedules from './ServerSchedules';
 import { Terminal, HardDrive, Database, Clock } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '../ui/tabs';
 
 interface ServerOverviewProps {
 	server: Server;

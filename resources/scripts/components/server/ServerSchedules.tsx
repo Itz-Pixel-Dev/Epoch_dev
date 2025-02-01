@@ -1,17 +1,28 @@
 import React, { useState } from 'react';
+import type { Schedule } from '@/api/server/schedules/getServerSchedules';
+import { Clock, Play, Pause, Edit2, Trash2, Plus } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/card';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
-import { Clock, Plus, Play, Pause, Trash2, Edit2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
-import { Schedule, Task } from '@/api/server/schedules/getServerSchedules';
 
 interface ServerSchedulesProps {
 	schedules: Schedule[];
-	onCreateSchedule: (data: Partial<Schedule>) => void;
-	onDeleteSchedule: (id: number) => void;
-	onToggleSchedule: (id: number) => void;
-	onEditSchedule: (id: number, data: Partial<Schedule>) => void;
+	onCreateSchedule: (schedule: Schedule) => Promise<void>;
+	onDeleteSchedule: (id: string) => Promise<void>;
+	onToggleSchedule: (id: string) => Promise<void>;
+	onEditSchedule: (schedule: Schedule) => Promise<void>;
+}
+
+interface ScheduleFormData {
+	name: string;
+	cron: {
+		minute: string;
+		hour: string;
+		dayOfMonth: string;
+		month: string;
+		dayOfWeek: string;
+	};
 }
 
 export default function ServerSchedules({
@@ -24,19 +35,19 @@ export default function ServerSchedules({
 	const [createDialogOpen, setCreateDialogOpen] = useState(false);
 	const [editSchedule, setEditSchedule] = useState<Schedule | null>(null);
 
-	const handleCreate = (data: Partial<Schedule>) => {
-		onCreateSchedule(data);
+	const handleCreate = async (data: ScheduleFormData) => {
+		await onCreateSchedule(data as Schedule);
 		setCreateDialogOpen(false);
 	};
 
-	const handleEdit = (data: Partial<Schedule>) => {
+	const handleEdit = async (data: ScheduleFormData) => {
 		if (editSchedule) {
-			onEditSchedule(editSchedule.id, data);
+			await onEditSchedule({ ...editSchedule, ...data });
 			setEditSchedule(null);
 		}
 	};
 
-	const ScheduleForm = ({ schedule, onSubmit }: { schedule?: Schedule; onSubmit: (data: any) => void }) => (
+	const ScheduleForm = ({ schedule, onSubmit }: { schedule?: Schedule; onSubmit: (data: ScheduleFormData) => void }) => (
 		<div className="space-y-4">
 			<div className="space-y-2">
 				<label className="text-sm font-medium">Name</label>
@@ -112,7 +123,7 @@ export default function ServerSchedules({
 										<Button
 											variant="outline"
 											size="icon"
-											onClick={() => onToggleSchedule(schedule.id)}
+											onClick={() => onToggleSchedule(schedule.id.toString())}
 										>
 											{schedule.isProcessing ? (
 												<Pause className="h-4 w-4" />
@@ -130,7 +141,7 @@ export default function ServerSchedules({
 										<Button
 											variant="outline"
 											size="icon"
-											onClick={() => onDeleteSchedule(schedule.id)}
+											onClick={() => onDeleteSchedule(schedule.id.toString())}
 										>
 											<Trash2 className="h-4 w-4 text-red-500" />
 										</Button>
